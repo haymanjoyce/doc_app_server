@@ -213,6 +213,25 @@ sudo bash /home/richard/pcon_server/harden.sh
 
 ---
 
+## Dependency Management
+
+### System packages (automatic)
+- unattended-upgrades handles Ubuntu security patches automatically
+- Auto-reboot at 03:00 UTC if required
+
+### Manual updates (run periodically)
+- Node.js: check current vs latest at nodejs.org, update via NodeSource if needed
+- npm: sudo npm install -g npm@latest
+- Claude Code: sudo npm install -g @anthropic-ai/claude-code
+- Python: Ubuntu-managed, handled by unattended-upgrades
+- Git: Ubuntu-managed, handled by unattended-upgrades
+
+### Before updating anything
+- Take a Hetzner snapshot first
+- Test the app is healthy after each update
+
+---
+
 ## What Claude Code Should Never Do
 
 - Modify application code in `/opt/pcon_app/app/` — that belongs to the pcon_app repo

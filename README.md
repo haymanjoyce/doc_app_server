@@ -17,12 +17,18 @@
 ├── nginx_setup.sh           # Nginx + SSL setup (run as sudo once per app)
 └── README.md                # This file
 
-/opt/doc_app/
-├── app/                     # doc_app source (git repo → haymanjoyce/doc_app)
+/opt/pcon_app/
+└── app/                     # pcon_app source (git repo → haymanjoyce/pcon_app)
+
+/var/pcon_app/
+├── projects/
+│   └── pcon_doc/            # Active project data
+│       ├── docs/            # Markdown documents
+│       ├── evidence/        # Source PDFs and text files
+│       ├── index_store/     # Persisted LlamaIndex vector index
+│       └── members/         # members.json — project access list
 └── users/
-    └── richard/
-        └── projects/
-            └── pcon_doc/    # Content repo (git repo → haymanjoyce/pcon_doc)
+    └── richard/             # Per-user data
 ```
 
 ---
@@ -157,7 +163,7 @@ curl -X POST \
 
 | Date | Label |
 |------|-------|
-| 2026-02-25 | Post doc_app deployment — full stack live |
+| 2026-02-25 | Post pcon_app deployment — full stack live |
 | 2026-02-25 | Post README refactor — separation of concerns across all three repos |
 
 ---
@@ -214,7 +220,7 @@ bash "$HOME/setup.sh"
 sudo bash "$HOME/harden.sh"
 
 # 4. Deploy applications — refer to each application's own README:
-#    - doc_app: /opt/doc_app/app/README.md
+#    - pcon_app: /opt/pcon_app/app/README.md
 ```
 
 ---

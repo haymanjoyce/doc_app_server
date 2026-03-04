@@ -1,4 +1,4 @@
-# CLAUDE.md — pcon_server
+# CLAUDE.md — doc_app_server
 
 This file provides persistent context for Claude Code. Read it at the start of every session.
 
@@ -31,7 +31,7 @@ This is **not** an application repo. Do not put application code here.
 
 ```
 /home/richard/
-  pcon_server/             ← this repo
+  doc_app_server/             ← this repo
     setup.sh               ← full provisioning script (run on fresh server)
     harden.sh              ← security hardening (run as sudo once)
     nginx_setup.sh         ← Nginx + SSL setup (run as sudo once per app)
@@ -71,14 +71,14 @@ This is **not** an application repo. Do not put application code here.
 Full provisioning script. Run on a fresh Ubuntu 24.04 server as the target user. Installs Python, Git, Claude Code (native installer — no Node.js required), and Poetry. Downloads installers to a temp file before executing.
 
 ```bash
-bash /home/richard/pcon_server/setup.sh
+bash /home/richard/doc_app_server/setup.sh
 ```
 
 ### harden.sh
 Security hardening. Run once after provisioning. Requires sudo.
 
 ```bash
-sudo bash /home/richard/pcon_server/harden.sh
+sudo bash /home/richard/doc_app_server/harden.sh
 ```
 
 Applies:
@@ -90,7 +90,7 @@ Applies:
 Nginx + SSL setup. Run once per application deployment. Requires sudo.
 
 ```bash
-sudo bash /home/richard/pcon_server/nginx_setup.sh
+sudo bash /home/richard/doc_app_server/nginx_setup.sh
 ```
 
 ---
@@ -199,15 +199,15 @@ On a fresh Ubuntu 24.04 server:
 # 1. From your local machine — copy SSH key
 ssh-copy-id richard@<new-server-ip>
 
-# 2. SSH in and clone pcon_server repo
+# 2. SSH in and clone doc_app_server repo
 ssh richard@<new-server-ip>
-git clone git@github.com:haymanjoyce/pcon_server.git /home/richard/pcon_server
+git clone git@github.com:haymanjoyce/doc_app_server.git /home/richard/doc_app_server
 
 # 3. Run provisioning script
-bash /home/richard/pcon_server/setup.sh
+bash /home/richard/doc_app_server/setup.sh
 
 # 4. Run security hardening
-sudo bash /home/richard/pcon_server/harden.sh
+sudo bash /home/richard/doc_app_server/harden.sh
 
 # 5. Deploy doc_app — see /opt/doc_app/app/CLAUDE.md
 ```
@@ -253,4 +253,4 @@ sudo bash /home/richard/pcon_server/harden.sh
 - [x] setup.sh complete and tested
 - [x] harden.sh complete and tested
 - [x] nginx_setup.sh complete and tested
-- [x] pcon_server repo on GitHub (haymanjoyce/pcon_server)
+- [x] doc_app_server repo on GitHub (haymanjoyce/doc_app_server)

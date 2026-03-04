@@ -1,4 +1,4 @@
-# CLAUDE.md — doc_app_server
+# CLAUDE.md — logbooklm_server
 
 This file provides persistent context for Claude Code. Read it at the start of every session.
 
@@ -6,7 +6,7 @@ This file provides persistent context for Claude Code. Read it at the start of e
 
 ## Purpose
 
-This repo documents the configuration and provisioning of the Hetzner VPS that hosts `doc_app`. It contains setup scripts and hardening scripts to allow the server to be fully reprovisioned from scratch.
+This repo documents the configuration and provisioning of the Hetzner VPS that hosts `LogbookLM`. It contains setup scripts and hardening scripts to allow the server to be fully reprovisioned from scratch.
 
 This is **not** an application repo. Do not put application code here.
 
@@ -23,7 +23,8 @@ This is **not** an application repo. Do not put application code here.
 | CPU | ARM64 (Ampere), 2 vCPU |
 | RAM | 4GB |
 | Admin user | richard |
-| Domain | pcon.pro |
+| Domain | logbooklm.com |
+
 
 ---
 
@@ -31,17 +32,17 @@ This is **not** an application repo. Do not put application code here.
 
 ```
 /home/richard/
-  doc_app_server/             ← this repo
+  logbooklm_server/             ← this repo
     setup.sh               ← full provisioning script (run on fresh server)
     harden.sh              ← security hardening (run as sudo once)
     nginx_setup.sh         ← Nginx + SSL setup (run as sudo once per app)
     CLAUDE.md              ← this file
     README.md              ← minimal placeholder
 
-/opt/doc_app/
-  app/                     ← doc_app source code (git repo → haymanjoyce/doc_app)
+/opt/logbooklm/
+  app/                     ← LogbookLM source code (git repo → haymanjoyce/logbooklm)
 
-/var/pcon/
+/var/logbooklm/
   projects/
     pcon_doc/              ← user content (docs, evidence, index_store)
       docs/
@@ -71,14 +72,14 @@ This is **not** an application repo. Do not put application code here.
 Full provisioning script. Run on a fresh Ubuntu 24.04 server as the target user. Installs Python, Git, Claude Code (native installer — no Node.js required), and Poetry. Downloads installers to a temp file before executing.
 
 ```bash
-bash /home/richard/doc_app_server/setup.sh
+bash /home/richard/logbooklm_server/setup.sh
 ```
 
 ### harden.sh
 Security hardening. Run once after provisioning. Requires sudo.
 
 ```bash
-sudo bash /home/richard/doc_app_server/harden.sh
+sudo bash /home/richard/logbooklm_server/harden.sh
 ```
 
 Applies:
@@ -90,7 +91,7 @@ Applies:
 Nginx + SSL setup. Run once per application deployment. Requires sudo.
 
 ```bash
-sudo bash /home/richard/doc_app_server/nginx_setup.sh
+sudo bash /home/richard/logbooklm_server/nginx_setup.sh
 ```
 
 ---
@@ -139,9 +140,9 @@ sudo ufw status
 
 ## Nginx
 
-Config: `/etc/nginx/sites-available/pcon.pro`
+Config: `/etc/nginx/sites-available/logbooklm.com`
 
-- `/` — serves `/opt/doc_app/app/frontend/dist/` (React static build)
+- `/` — serves `/opt/logbooklm/app/frontend/dist/` (React static build)
 - `/api/` — proxied to `http://127.0.0.1:8000/api/`
 - `/api/chat/ws` — WebSocket proxied to FastAPI
 - SSL via Let's Encrypt (auto-renews via certbot timer)
@@ -155,15 +156,15 @@ sudo certbot renew --dry-run   # test cert renewal
 
 ---
 
-## doc_app Service
+## LogbookLM Service
 
 Managed by systemd user service.
 
 ```bash
-systemctl --user status doc_app
-systemctl --user restart doc_app
-systemctl --user stop doc_app
-journalctl --user -u doc_app -f
+systemctl --user status logbooklm
+systemctl --user restart logbooklm
+systemctl --user stop logbooklm
+journalctl --user -u logbooklm -f
 ```
 
 ---
@@ -188,6 +189,7 @@ Recommended: snapshot before any major change.
 | 2026-03-01 | Post GitHub integration removal and CLAUDE.md cleanup |
 | 2026-03-04 | Post app rename (pcon_app → doc_app) |
 | 2026-03-04 | Post data directory rename (/var/pcon_app → /var/pcon) |
+| 2026-03-04 | Post brand rename to LogbookLM (doc_app → logbooklm, /opt/doc_app → /opt/logbooklm, /var/pcon → /var/logbooklm, domain: logbooklm.com) |
 
 ---
 
@@ -199,17 +201,17 @@ On a fresh Ubuntu 24.04 server:
 # 1. From your local machine — copy SSH key
 ssh-copy-id richard@<new-server-ip>
 
-# 2. SSH in and clone doc_app_server repo
+# 2. SSH in and clone logbooklm_server repo
 ssh richard@<new-server-ip>
-git clone git@github.com:haymanjoyce/doc_app_server.git /home/richard/doc_app_server
+git clone git@github.com:haymanjoyce/logbooklm_server.git /home/richard/logbooklm_server
 
 # 3. Run provisioning script
-bash /home/richard/doc_app_server/setup.sh
+bash /home/richard/logbooklm_server/setup.sh
 
 # 4. Run security hardening
-sudo bash /home/richard/doc_app_server/harden.sh
+sudo bash /home/richard/logbooklm_server/harden.sh
 
-# 5. Deploy doc_app — see /opt/doc_app/app/CLAUDE.md
+# 5. Deploy LogbookLM — see /opt/logbooklm/app/CLAUDE.md
 ```
 
 ---
@@ -233,8 +235,8 @@ sudo bash /home/richard/doc_app_server/harden.sh
 
 ## What Claude Code Should Never Do
 
-- Modify application code in `/opt/doc_app/app/` — that belongs to the doc_app repo
-- Touch user data in `/var/pcon/` — that belongs to the application
+- Modify application code in `/opt/logbooklm/app/` — that belongs to the logbooklm repo
+- Touch user data in `/var/logbooklm/` — that belongs to the application
 - Delete or modify SSH keys in `/home/richard/.ssh/`
 - Disable or weaken any security hardening (fail2ban, SSH config, ufw)
 - Commit `.env` files or any secrets
@@ -249,8 +251,8 @@ sudo bash /home/richard/doc_app_server/harden.sh
 - [x] tmux configured
 - [x] Claude Code installed
 - [x] Nginx configured with SSL
-- [x] doc_app deployed and running
+- [x] LogbookLM deployed and running
 - [x] setup.sh complete and tested
 - [x] harden.sh complete and tested
 - [x] nginx_setup.sh complete and tested
-- [x] doc_app_server repo on GitHub (haymanjoyce/doc_app_server)
+- [x] logbooklm_server repo on GitHub (haymanjoyce/logbooklm_server)

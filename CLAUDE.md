@@ -25,7 +25,6 @@ This is **not** an application repo. Do not put application code here.
 | Admin user | richard |
 | Domain | logbooklm.com |
 
-
 ---
 
 ## Directory Layout
